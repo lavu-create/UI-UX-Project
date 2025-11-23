@@ -1,0 +1,35 @@
+{
+  "name": "clario",
+  "version": "1.0.0",
+  "description": "Clario is not just a productivity tool - it's your personal space to stay organized, motivated, and mindful. Thoroughly Crafted and Purposefully built.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "server": "nodemon backend/server.js",
+    "client": "npm run dev --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "keywords": [
+    "Clario",
+    "Tasks",
+    "Emotions",
+    "Mental Health",
+    "Mood"
+  ],
+  "author": "Nitesh",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "colors": "^1.4.0",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "express-async-handler": "^1.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.17.0",
+    "mongoose": "^8.16.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "nodemon": "^3.1.10"
+  }
+}
