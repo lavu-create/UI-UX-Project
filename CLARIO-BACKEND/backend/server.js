@@ -16,7 +16,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// ✅ CORS setup
+// CORS setup
 app.use(cors({
     origin: 'https://clario-1-4iuw.onrender.com',
     credentials: true
