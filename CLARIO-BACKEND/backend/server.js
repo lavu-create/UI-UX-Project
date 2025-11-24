@@ -2,6 +2,7 @@ const express = require('express');
 const colors = require('colors');
 const dotenv = require('dotenv').config();
 const cors = require('cors');
+const cookieParser = require("cookie-parser");
 const { errorHandler } = require('./middleware/errorMiddleware');
 const connectDB = require('./config/db');
 
@@ -14,7 +15,8 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(cors({ origin: [...], credentials: true }));
 
 // CORS setup
 app.use(cors({
