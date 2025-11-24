@@ -2,53 +2,33 @@ const express = require('express');
 const colors = require('colors');
 const dotenv = require('dotenv').config();
 const cors = require('cors');
-const cookieParser = require("cookie-parser");
 const { errorHandler } = require('./middleware/errorMiddleware');
 const connectDB = require('./config/db');
 
-const PORT = process.env.PORT || 5000;
-
-// Connect to Database
+const app = express();
 connectDB();
 
-const app = express();
-
-// Middleware
+// Body parser
 app.use(express.json());
-app.use(cookieParser());
+app.use(express.urlencoded({ extended: false }));
 
-const allowedOrigins = [
-    'https://clario-1-4iuw.onrender.com', 
-    'http://localhost:3000'
-];
-
-app.use(cors({
-    origin: allowedOrigins,
-    credentials: true
-}));
-
-
-// CORS setup
-app.use(cors({
-    origin: [
-        'https://clario-1-4iuw.onrender.com', 
-        'http://localhost:3000'
-    ],
-    credentials: true
-}));
+// ---------------- CORS -------------------
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 // Routes
-app.get('/', (req, res) => {
-    res.status(200).json({ message: 'Welcome to the Clario Backend API' });
-});
+app.use("/api/users", require("./routes/userRoutes"));
 
-/** USER ROUTES */
-app.use('/api/users', require('./routes/userRoutes'));
-
-// Resource Error Handler
+// Error middleware
 app.use(errorHandler);
 
 // Start server
-app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`);
-});
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () =>
+  console.log(`Server running on port ${PORT}`.green.bold)
+);
