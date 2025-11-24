@@ -9,7 +9,7 @@
       <img src="FRONTEND/assets/website%20logo.jpg" alt="Clario Website Logo" width="100"><br>
       Personal Dashboard for Tasks, Mood Tracking & Productivity Analytics<br>
       ⚡️ Project submission (END-Semester Lab Evaluation)<br>
-      👩‍💻 Submitted by: Lavanya (102303425)<br>
+      ###👩‍💻 Submitted by: Lavanya (102303425)<br>
       👩‍🏫 Submitted to: Ms. Kanupriya
     </td>
   </tr>
