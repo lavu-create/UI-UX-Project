@@ -1,7 +1,7 @@
 const express = require('express');
 const colors = require('colors');
 const dotenv = require('dotenv').config();
-const cors = require('cors'); // ✅ add this
+const cors = require('cors');
 const { errorHandler } = require('./middleware/errorMiddleware');
 const connectDB = require('./config/db');
 
