@@ -16,7 +16,17 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: [...], credentials: true }));
+
+const allowedOrigins = [
+    'https://clario-1-4iuw.onrender.com', 
+    'http://localhost:3000'
+];
+
+app.use(cors({
+    origin: allowedOrigins,
+    credentials: true
+}));
+
 
 // CORS setup
 app.use(cors({
