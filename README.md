@@ -5,8 +5,7 @@
       <img src="FRONTEND/assets/App%20logo.jpg" alt="Clario App Logo" width="140"><br>
     </td>
     <td style="padding-left:15px; vertical-align:top;">
-      <img src="FRONTEND/assets/website%20logo.jpg" alt="Clario Website Logo" width="100"><br>
-      Personal Dashboard for Tasks, Mood Tracking & Productivity Analytics<br>
+      <img src="FRONTEND/assets/website%20logo.jpg" alt="Clario Website Logo" width="100">Personal Dashboard for Tasks, Mood Tracking & Productivity Analytics<br>
       Enhancing Productivity & Well-being for Everyone<br>
       ⚡️ Project submission (END-Semester Lab Evaluation)<br>
       👩‍💻 Submitted by: Lavanya (102303425)<br>
