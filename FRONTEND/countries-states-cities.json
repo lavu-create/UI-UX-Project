@@ -1,0 +1,19 @@
+{
+"countries": [
+{"name": "India", "states": [
+{"name": "Maharashtra", "cities": ["Mumbai", "Pune", "Nagpur", "Nashik", "Aurangabad"]},
+{"name": "Punjab", "cities": ["Amritsar", "Ludhiana", "Patiala", "Jalandhar", "Bathinda"]},
+{"name": "Delhi", "cities": ["New Delhi"]}
+]},
+{"name": "United States", "states": [
+{"name": "California", "cities": ["Los Angeles", "San Francisco", "San Diego", "Sacramento"]},
+{"name": "Texas", "cities": ["Houston", "Dallas", "Austin", "San Antonio"]},
+{"name": "New York", "cities": ["New York City", "Buffalo", "Rochester"]}
+]},
+{"name": "Canada", "states": [
+{"name": "Ontario", "cities": ["Toronto", "Ottawa", "Hamilton"]},
+{"name": "British Columbia", "cities": ["Vancouver", "Victoria", "Richmond"]},
+{"name": "Quebec", "cities": ["Montreal", "Quebec City", "Laval"]}
+]}
+]
+}

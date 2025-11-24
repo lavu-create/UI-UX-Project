@@ -1,74 +1,95 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // ------------------- Elements -------------------
   const loginModal = document.getElementById("loginModal");
   const openLoginBtn = document.getElementById("openLoginBtn");
   const closeLoginModal = document.getElementById("closeLoginModal");
   const loginForm = document.getElementById("loginForm");
   const signupForm = document.getElementById("signupForm");
-  const showLogin = document.getElementById("switchToLogin");
-  const showSignup = document.getElementById("switchToSignup");
-  // Open / close modal
-  openLoginBtn.addEventListener("click", () => loginModal.classList.remove("hidden"));
-  closeLoginModal.addEventListener("click", () => loginModal.classList.add("hidden"));
-  // Switch forms
-  showLogin.addEventListener("click", () => {
+  const switchToLoginBtn = document.getElementById("switchToLogin");
+  const switchToSignupBtn = document.getElementById("switchToSignup");
+
+  // ------------------- Helper Functions -------------------
+  const showModal = (modal) => modal.classList.remove("hidden");
+  const hideModal = (modal) => modal.classList.add("hidden");
+
+  const saveUserData = (data) => {
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("userName", data.name || "");
+    localStorage.setItem("userEmail", data.email || "");
+  };
+
+  const handleResponse = async (response) => {
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || "Request failed");
+    return data;
+  };
+
+  const handleError = (error) => {
+    console.error(error);
+    alert(error.message || "Something went wrong. Please try again.");
+  };
+
+  const submitForm = async (url, payload, successMsg) => {
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await handleResponse(response);
+      saveUserData(data);
+      alert(successMsg);
+      hideModal(loginModal);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  // ------------------- Modal Controls -------------------
+  openLoginBtn.addEventListener("click", () => showModal(loginModal));
+  closeLoginModal.addEventListener("click", () => hideModal(loginModal));
+
+  switchToLoginBtn.addEventListener("click", () => {
     loginForm.classList.remove("hidden");
     signupForm.classList.add("hidden");
   });
-  showSignup.addEventListener("click", () => {
+
+  switchToSignupBtn.addEventListener("click", () => {
     signupForm.classList.remove("hidden");
     loginForm.classList.add("hidden");
   });
-  // Login form submit
-  loginForm.addEventListener("submit", async (e) => {
+
+  // ------------------- Login -------------------
+  loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const email = document.getElementById("loginEmail").value;
-    const password = document.getElementById("loginPassword").value;
-    try {
-      const response = await fetch("https://clario-8rvp.onrender.com/api/users/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await response.json();
-      if (!response.ok) alert(data.message || "Login failed");
-      else {
-        alert(`Logged in successfully! Welcome ${data.name || ""}`);
-        loginModal.classList.add("hidden");
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("userName", data.name);
-        localStorage.setItem("userEmail", data.email);
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Server error. Please try again later.");
-    }
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value.trim();
+    if (!email || !password) return alert("Please enter email and password");
+
+    submitForm(
+      "https://clario-8rvp.onrender.com/api/users/login",
+      { email, password },
+      `Logged in successfully! Welcome ${email}`
+    );
   });
-  // Signup form submit
-  signupForm.addEventListener("submit", async (e) => {
+
+  // ------------------- Signup -------------------
+  signupForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const name = document.getElementById("signupName").value;
-    const email = document.getElementById("signupEmail").value;
-    const password = document.getElementById("signupPassword").value;
-    try {
-      const response = await fetch("https://clario-8rvp.onrender.com/api/users/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
-      });
-      const data = await response.json();
-      if (!response.ok) alert(data.message || "Signup failed");
-      else {
-        alert(`Signup successful! Welcome ${data.name || ""}`);
-        loginModal.classList.add("hidden");
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("userName", data.name);
-        localStorage.setItem("userEmail", data.email);
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Server error. Please try again later.");
-    }
+    const name = document.getElementById("signupName").value.trim();
+    const email = document.getElementById("signupEmail").value.trim();
+    const password = document.getElementById("signupPassword").value.trim();
+    if (!name || !email || !password) return alert("All fields are required");
+
+    submitForm(
+      "https://clario-8rvp.onrender.com/api/users/register",
+      { name, email, password },
+      `Signup successful! Welcome ${name}`
+    );
   });
+
+  // ------------------- Initialize -------------------
+  console.log("Login/Signup module initialized");
 
   const openInfoBtn = document.getElementById("openInfoBtn"); // your Info button
   const infoModal = document.getElementById("infoModal");     // Info modal container
@@ -1040,87 +1061,84 @@ document.addEventListener("DOMContentLoaded", () => {
   initWeather();
   
 
-
   //Location
   const countryLocation = document.getElementById("countryLocation");
   const stateLocation = document.getElementById("stateLocation");
   const cityLocation = document.getElementById("cityLocation");
-  // ------------------- Load Countries -------------------
-  fetch("https://countriesnow.space/api/v0.1/countries/positions")
-    .then(res => res.json())
-    .then(data => {
-      data.data.forEach(country => {
-        const opt = document.createElement("option");
-        opt.value = country.name;
-        opt.textContent = country.name;
-        countryLocation.appendChild(opt);
-      });
-      // Restore saved country if exists
-      const savedCountry = localStorage.getItem("locationCountry");
-      if (savedCountry) {
-        countryLocation.value = savedCountry;
-        countryLocation.dispatchEvent(new Event("change"));
-      }
+
+  let countriesData = [];
+
+  fetch('countries-states-cities.json')
+  .then(res => res.json())
+  .then(json => {
+    countriesData = json.countries; // store globally
+    countriesData.forEach(country => {
+      const opt = document.createElement("option");
+      opt.value = country.name;
+      opt.textContent = country.name;
+      countryLocation.appendChild(opt);
     });
-  // ------------------- On Country Change -------------------
+
+    const savedCountry = localStorage.getItem("locationCountry");
+    if (savedCountry) {
+      countryLocation.value = savedCountry;
+      countryLocation.dispatchEvent(new Event("change"));
+    }
+  });
+
+  // On country change
   countryLocation.addEventListener("change", () => {
     stateLocation.innerHTML = `<option value="">Select State</option>`;
     cityLocation.innerHTML = `<option value="">Select City</option>`;
     cityLocation.disabled = true;
-    const country = countryLocation.value;
-    if (!country) return;
-    localStorage.setItem("locationCountry", country);
-    fetch("https://countriesnow.space/api/v0.1/countries/states", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ country })
-    })
-    .then(res => res.json())
-    .then(data => {
-      data.data.states.forEach(state => {
-        const opt = document.createElement("option");
-        opt.value = state.name;
-        opt.textContent = state.name;
-        stateLocation.appendChild(opt);
-      });
-      stateLocation.disabled = false;
-      // Restore saved state if exists
-      const savedState = localStorage.getItem("locationState");
-      if (savedState) {
-        stateLocation.value = savedState;
-        stateLocation.dispatchEvent(new Event("change"));
-      }
+
+    const countryName = countryLocation.value;
+    if (!countryName) return;
+    localStorage.setItem("locationCountry", countryName);
+  
+    const selectedCountry = countriesData.find(c => c.name === countryName);
+    if (!selectedCountry) return;
+
+    selectedCountry.states.forEach(state => {
+      const opt = document.createElement("option");
+      opt.value = state.name;
+      opt.textContent = state.name;
+      stateLocation.appendChild(opt);
     });
+    stateLocation.disabled = false;
+
+    const savedState = localStorage.getItem("locationState");
+    if (savedState) {
+      stateLocation.value = savedState;
+      stateLocation.dispatchEvent(new Event("change"));
+    }
   });
-  // ------------------- On State Change -------------------
+
+  // On state change
   stateLocation.addEventListener("change", () => {
-    cityLocation.innerHTML = `<option value="">Select City</option>`;
-    const country = countryLocation.value;
-    const state = stateLocation.value;
-    if (!state) return;
-    localStorage.setItem("locationState", state);
-    fetch("https://countriesnow.space/api/v0.1/countries/state/cities", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ country, state })
-    })
-    .then(res => res.json())
-    .then(data => {
-      data.data.forEach(city => {
-        const opt = document.createElement("option");
-        opt.value = city;
-        opt.textContent = city;
-        cityLocation.appendChild(opt);
-      });
-      cityLocation.disabled = false;
-      // Restore saved city if exists
-      const savedCity = localStorage.getItem("locationCity");
-      if (savedCity) {
-        cityLocation.value = savedCity;
-      }
+    cityLocation.innerHTML = `<option value="">Select City</option>`; 
+    const countryName = countryLocation.value;
+    const stateName = stateLocation.value;
+    if (!stateName) return;
+    localStorage.setItem("locationState", stateName);
+
+    const selectedCountry = countriesData.find(c => c.name === countryName);
+    const selectedState = selectedCountry?.states.find(s => s.name === stateName);
+    if (!selectedState) return;
+  
+    selectedState.cities.forEach(city => {
+      const opt = document.createElement("option");
+      opt.value = city;
+      opt.textContent = city;
+      cityLocation.appendChild(opt);
     });
+    cityLocation.disabled = false;
+
+    const savedCity = localStorage.getItem("locationCity");
+    if (savedCity) cityLocation.value = savedCity;
   });
-  // ------------------- On City Change -------------------
+
+  // On city change
   cityLocation.addEventListener("change", () => {
     const city = cityLocation.value;
     localStorage.setItem("locationCity", city);

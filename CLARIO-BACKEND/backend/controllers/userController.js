@@ -35,27 +35,28 @@ const registerUser = asyncHandler(async (req, res) => {
 
 // LOGIN USER
 const loginUser = asyncHandler(async (req, res) => {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+  const user = await User.findOne({ email });
 
-    if (!user) {
-        return res.status(400).json({ message: "Invalid credentials" });
-    }
+  if (!user) {
+    return res.status(400).json({ message: "Invalid credentials" });
+  }
 
-    const match = await bcrypt.compare(password, user.password);
+  const match = await bcrypt.compare(password, user.password);
 
-    if (!match) {
-        return res.status(400).json({ message: "Invalid credentials" });
-    }
+  if (!match) {
+    return res.status(400).json({ message: "Invalid credentials" });
+  }
 
-    return res.status(200).json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        token: generateToken(user._id),
-    });
+  // ✅ send only required fields
+  return res.status(200).json({
+    token: generateToken(user._id),
+    name: user.name,
+    email: user.email
+  });
 });
+
 
 // GET LOGGED-IN USER
 const getMeUser = asyncHandler(async (req, res) => {
