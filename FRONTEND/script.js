@@ -261,7 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
           eventModal.classList.remove("hidden"); // open edit modal
         });
         const del = document.createElement("button");
-        del.textContent = <i class="fa-solid fa-trash"></i>;
+        del.textContent = "🗑️";
         del.className = "delete-task-btn";
         del.onclick = () => {
           const modal = document.getElementById("deleteConfirmModal");
