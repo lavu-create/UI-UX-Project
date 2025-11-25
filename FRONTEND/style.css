@@ -185,6 +185,28 @@ section#historySection.hidden, section#settingsSection.hidden {
   align-items: center;
   gap: 100px;
 }
+
+#legalModal {
+  position: fixed;          /* fixed to viewport */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* center modal */
+  z-index: 1000;            /* above other elements */
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 25px rgba(252, 81, 2, 0.568);
+  width: 80%;
+  max-width: 385px;
+  max-height: 800px;
+  overflow-y: auto;         /* scroll if content too tall */
+  padding: 0.2px;
+  display: none;            /* hidden by default */
+}
+
+#legalModal.visible {
+  display: block;
+}
+
 /* ========== History ========== */
 #historySection {
   overflow-y: auto;

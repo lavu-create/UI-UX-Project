@@ -1169,15 +1169,15 @@ document.addEventListener("DOMContentLoaded", () => {
   openTermsBtn.addEventListener("click", () => {
     legalTitle.textContent = "Terms & Conditions";
     legalContent.innerHTML = termsText;
-    legalModal.classList.remove("hidden");
+    legalModal.classList.add("visible");
   });
   openPrivacyBtn.addEventListener("click", () => {
     legalTitle.textContent = "Privacy Policy";
     legalContent.innerHTML = privacyText;
-    legalModal.classList.remove("hidden");
+    legalModal.classList.add("visible");
   });
   closeLegalModal.addEventListener("click", () => {
-    legalModal.classList.add("hidden");
+    legalModal.classList.remove("visible");
   });
   
   // Render charts if functions exist
